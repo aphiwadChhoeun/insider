@@ -8,7 +8,33 @@
     />
     <meta name="theme-color" content="#12101a" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <title>Insider</title>
+    <meta name="apple-mobile-web-app-title" content="Insider" />
+
+    <!-- Relative so Vite fingerprints the file into dist/ rather than
+         expecting it in a public/ directory this project doesn't have. -->
+    <link rel="icon" type="image/png" href="./assets/icon.png" />
+    <link rel="apple-touch-icon" href="./assets/icon.png" />
+
+    <title>Insider — pass-the-phone role dealer</title>
+    <meta
+      name="description"
+      content="Deal hidden roles for the party game Insider on a single phone — one Master, one Insider, the rest Commons — with a shared secret word and a round timer."
+    />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Insider" />
+    <meta property="og:title" content="Insider — pass-the-phone role dealer" />
+    <meta
+      property="og:description"
+      content="Deal hidden roles for the party game Insider on a single phone — one Master, one Insider, the rest Commons — with a shared secret word and a round timer."
+    />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Insider — pass-the-phone role dealer" />
+    <meta
+      name="twitter:description"
+      content="Deal hidden roles for the party game Insider on a single phone — one Master, one Insider, the rest Commons — with a shared secret word and a round timer."
+    />
   </head>
   <body>
     <div id="root"></div>

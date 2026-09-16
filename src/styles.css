@@ -1,18 +1,24 @@
 :root {
-  --bg: #04070e;
-  --bg-panel: #0a1424;
-  --bg-input: #081220;
-  --line: #1d3b58;
-  --line-hot: #2a6d93;
-  --text: #e8f6ff;
-  --text-dim: #7e9cb8;
-  --accent: #2ae0ff;
-  --accent-deep: #1a74ff;
-  --accent-text: #021018;
-  --master: #ffc14d;
-  --insider: #ff4d7d;
-  --common: #35f0d0;
-  --radius: 6px;
+  /* Ink-violet dossier stock, lit from the corners by hot signal colour. */
+  --bg: #0b0619;
+  --bg-panel: #170d2e;
+  --bg-input: #130a29;
+  --line: #3a2166;
+  --line-hot: #7a3fd6;
+  --text: #f7edff;
+  --text-dim: #ab97d1;
+
+  /* Two-tone signal: amber files it, magenta flags it. */
+  --accent: #ff2e93;
+  --accent-warm: #ffae1f;
+  --accent-deep: #8a1bff;
+  --accent-text: #1c0517;
+
+  --master: #ffd23f;
+  --insider: #ff2d55;
+  --common: #19e6a0;
+
+  --radius: 5px;
   --tap: 52px;
 
   /* Tinted per role on the reveal card and the summary roster. */
@@ -48,8 +54,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Cold light from above plus a faint instrument grid, both fixed so the
-   backdrop stays put while a screen scrolls. */
+/* Four coloured lights in the corners plus sonar rings rising from below the
+   fold, both fixed so the backdrop stays put while a screen scrolls. */
 body::before {
   content: '';
   position: fixed;
@@ -57,9 +63,12 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(90% 55% at 50% -10%, #12395c 0%, transparent 70%),
-    radial-gradient(70% 50% at 100% 100%, #131a4d 0%, transparent 65%),
-    linear-gradient(180deg, #050a14 0%, var(--bg) 60%);
+    repeating-radial-gradient(circle at 50% 118%, #ff2e9300 0 44px, #ff2e9317 44px 45px),
+    radial-gradient(85% 55% at 10% -10%, #ff2e9347 0%, transparent 62%),
+    radial-gradient(75% 50% at 95% 4%, #8a1bff5c 0%, transparent 60%),
+    radial-gradient(80% 45% at 88% 104%, #ffae1f33 0%, transparent 58%),
+    radial-gradient(70% 40% at 4% 98%, #19e6a026 0%, transparent 58%),
+    linear-gradient(180deg, #150827 0%, var(--bg) 55%);
 }
 
 body::after {
@@ -68,12 +77,12 @@ body::after {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  opacity: 0.5;
+  opacity: 0.55;
   background-image:
-    linear-gradient(to right, #2ae0ff14 1px, transparent 1px),
-    linear-gradient(to bottom, #2ae0ff14 1px, transparent 1px);
+    linear-gradient(to right, #ff2e9314 1px, transparent 1px),
+    linear-gradient(to bottom, #ff2e9314 1px, transparent 1px);
   background-size: 34px 34px;
-  mask-image: radial-gradient(120% 80% at 50% 0%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(120% 80% at 50% 0%, #000 0%, transparent 78%);
 }
 
 #root {
@@ -89,11 +98,28 @@ body::after {
   margin: 0 auto;
 }
 
-/* On anything wider than the phone column, draw the column as a hull. */
+/* Hazard tape across the top of the column — the folder this all came out of. */
+.app::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  z-index: 1;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--accent-warm) 0 11px,
+    #24082c 11px 22px
+  );
+}
+
+/* On anything wider than the phone column, draw the column as a lit file edge. */
 @media (min-width: 540px) {
   .app {
     border-inline: 1px solid var(--line);
-    background: linear-gradient(180deg, #2ae0ff0a, transparent 30%);
+    background: linear-gradient(180deg, #ff2e930f, transparent 30%);
+    box-shadow: 0 0 80px -20px #8a1bff59;
   }
 }
 
@@ -116,7 +142,7 @@ body::after {
 .screen-head {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .screen-foot {
@@ -140,7 +166,19 @@ body::after {
   line-height: 1.2;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  text-shadow: 0 0 28px #2ae0ff4d;
+  text-shadow: 0 0 30px #ff2e9366;
+}
+
+/* The wordmark: one hot gradient, glowing through the glyphs themselves. */
+.title.brand {
+  font-size: 44px;
+  letter-spacing: 0.14em;
+  background: linear-gradient(104deg, var(--accent-warm), var(--accent) 55%, var(--accent-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 0 26px #ff2e9380);
 }
 
 .subtitle,
@@ -152,7 +190,7 @@ body::after {
 
 .subtitle {
   font-family: var(--font-hud);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -164,12 +202,13 @@ body::after {
 
 .eyebrow {
   margin: 0;
-  color: var(--accent);
+  color: var(--accent-warm);
   font-family: var(--font-hud);
   font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.22em;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
+  text-shadow: 0 0 18px #ffae1f66;
 }
 
 .lede {
@@ -182,13 +221,17 @@ body::after {
 
 .big-name {
   margin: 4px 0 8px;
-  font-size: 38px;
+  font-size: 40px;
   font-weight: 700;
   line-height: 1.1;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   overflow-wrap: anywhere;
-  text-shadow: 0 0 32px #2ae0ff59;
+  background: linear-gradient(100deg, var(--accent-warm), var(--accent) 80%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 24px #ff2e9373);
 }
 
 .prose p {
@@ -202,11 +245,83 @@ body::after {
 }
 
 .prose strong {
-  color: var(--text);
+  color: var(--accent-warm);
   font-family: var(--font-hud);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/* --- classification chip ------------------------------------------------ */
+
+.classification {
+  margin: 0;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 11px;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  color: var(--accent);
+  font-family: var(--font-hud);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+}
+
+/* A live channel light, because something is always listening. */
+.classification::before {
+  content: '';
+  flex: none;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+  animation: blink 2.4s ease-in-out infinite;
+}
+
+/* The round is over — the channel is closed and the file is open. */
+.classification.done {
+  border-color: color-mix(in srgb, var(--common) 55%, transparent);
+  background: color-mix(in srgb, var(--common) 14%, transparent);
+  color: var(--common);
+}
+
+.classification.done::before {
+  background: var(--common);
+  box-shadow: 0 0 10px var(--common);
+  animation: none;
+}
+
+/* --- stamps ------------------------------------------------------------- */
+
+/* Rubber-stamped over the card, tilted and double-framed like the real thing. */
+.stamp {
+  align-self: center;
+  margin: 0 auto 6px;
+  padding: 7px 15px;
+  border: 2px solid currentColor;
+  border-radius: 2px;
+  outline: 1px solid currentColor;
+  outline-offset: 3px;
+  color: var(--role);
+  font-family: var(--font-hud);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  opacity: 0.85;
+  transform: rotate(-3.5deg);
+  box-shadow: 0 0 30px -10px currentColor;
+}
+
+.stamp.cleared {
+  color: var(--common);
+  transform: rotate(2.5deg);
 }
 
 /* --- panels ------------------------------------------------------------- */
@@ -214,9 +329,10 @@ body::after {
 .panel {
   position: relative;
   background:
-    linear-gradient(180deg, #2ae0ff0f, transparent 45%),
-    color-mix(in srgb, var(--bg-panel) 88%, transparent);
+    linear-gradient(180deg, #ff2e9314, transparent 45%),
+    color-mix(in srgb, var(--bg-panel) 90%, transparent);
   border: 1px solid var(--line);
+  border-left: 2px solid color-mix(in srgb, var(--accent) 55%, var(--line));
   border-radius: var(--radius);
   padding: 18px;
   display: flex;
@@ -232,7 +348,7 @@ body::after {
   width: 13px;
   height: 13px;
   border: 1px solid var(--accent);
-  opacity: 0.55;
+  opacity: 0.6;
   pointer-events: none;
 }
 
@@ -256,7 +372,7 @@ body::after {
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: 10px;
   font-family: var(--font-hud);
   font-size: 13px;
   font-weight: 700;
@@ -265,20 +381,38 @@ body::after {
   color: var(--text);
 }
 
+/* A reticle rather than a bullet. */
 .panel-title::before {
   content: '';
   flex: none;
-  width: 6px;
-  height: 6px;
-  background: var(--accent);
+  width: 11px;
+  height: 11px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background:
+    linear-gradient(var(--accent), var(--accent)) center / 100% 1px no-repeat,
+    linear-gradient(var(--accent), var(--accent)) center / 1px 100% no-repeat;
   box-shadow: 0 0 10px var(--accent);
-  transform: rotate(45deg);
 }
 
 .panel-note {
   color: var(--text-dim);
   font-weight: 400;
   letter-spacing: 0.08em;
+}
+
+/* Section number, filed off to the right edge of the panel heading. */
+.panel-code {
+  margin-left: auto;
+  flex: none;
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: #ffffff0a;
+  color: var(--text-dim);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
 }
 
 /* --- stepper ------------------------------------------------------------ */
@@ -307,7 +441,7 @@ body::after {
 .stepper-button:active {
   background: var(--accent);
   color: var(--accent-text);
-  box-shadow: 0 0 22px #2ae0ff66;
+  box-shadow: 0 0 24px #ff2e9399;
 }
 
 .stepper-button:disabled {
@@ -325,7 +459,8 @@ body::after {
   display: inline-flex;
   align-items: baseline;
   gap: 6px;
-  text-shadow: 0 0 24px #2ae0ff59;
+  color: var(--accent-warm);
+  text-shadow: 0 0 26px #ff2e9399;
 }
 
 .stepper-unit {
@@ -365,9 +500,9 @@ body::after {
 }
 
 .segment.on {
-  background: linear-gradient(140deg, var(--accent), var(--accent-deep));
+  background: linear-gradient(120deg, var(--accent-warm), var(--accent) 75%);
   color: var(--accent-text);
-  box-shadow: 0 0 20px #2ae0ff4d;
+  box-shadow: 0 0 22px -4px #ff2e93cc;
 }
 
 /* --- inputs ------------------------------------------------------------- */
@@ -393,7 +528,7 @@ body::after {
 }
 
 .name-input::placeholder {
-  color: #4e6b85;
+  color: #6c56a0;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-size: 13px;
@@ -401,9 +536,9 @@ body::after {
 
 .name-input:focus {
   outline: none;
-  border-left-color: var(--accent);
   border-color: var(--line-hot);
-  box-shadow: 0 0 0 1px var(--accent), 0 0 22px -4px #2ae0ff80;
+  border-left-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 0 24px -4px #ff2e9399;
 }
 
 /* --- buttons ------------------------------------------------------------ */
@@ -424,38 +559,78 @@ body::after {
   overflow: hidden;
 }
 
+/* The slow light sweep rides the background rather than a pseudo-element, so
+   the primary action can let its sparks past the edge without the sweep
+   spilling out too. That leaves both pseudo-elements free for the arc. */
 .button.primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+  overflow: visible;
+  background-image:
+    linear-gradient(105deg, #ffffff00 36%, #ffffff7a 50%, #ffffff00 64%),
+    linear-gradient(120deg, var(--accent-warm), var(--accent) 78%);
+  background-size: 280% 100%, 100% 100%;
+  background-position: -190% 0, 0 0;
+  background-repeat: no-repeat;
   color: var(--accent-text);
   box-shadow:
-    0 0 0 1px #2ae0ffa6,
-    0 10px 30px -12px #2ae0ffb3,
-    inset 0 1px 0 #ffffff40;
+    0 0 0 1px #ffae1fa6,
+    0 12px 34px -12px #ff2e93cc,
+    inset 0 1px 0 #ffffff59;
+  animation: sweep-fill 4.5s ease-in-out 1.5s infinite;
 }
 
-/* A slow light sweep across the primary action — the one live thing on screen. */
-.button.primary::after {
+/* The rim arcs over twice and dies, on a loop — the charge behind the sparks. */
+.button.primary::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(105deg, transparent 35%, #ffffff5e 50%, transparent 65%);
-  transform: translateX(-120%);
-  animation: sweep 4.5s ease-in-out 1.5s infinite;
+  inset: -1px;
+  border: 1px solid #fff;
+  border-radius: inherit;
+  opacity: 0;
+  box-shadow: 0 0 14px 1px var(--accent-warm), inset 0 0 12px #ffffff8c;
+  pointer-events: none;
+  animation: crackle 2.6s steps(1, end) infinite;
 }
 
 .button.primary:active {
   transform: scale(0.985);
-  box-shadow: 0 0 0 1px #2ae0ff, 0 0 26px -6px #2ae0ff;
+  box-shadow: 0 0 0 1px var(--accent-warm), 0 0 28px -6px var(--accent);
+}
+
+/* --- spark shower ------------------------------------------------------- */
+
+.electrify {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.spark {
+  position: absolute;
+  top: var(--y);
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 6px 2px #ffffffe6, 0 0 18px 5px var(--accent);
+  opacity: 0;
+  animation: spark var(--dur) cubic-bezier(0.25, 0.6, 0.35, 1) var(--delay) infinite;
+}
+
+/* Half the shower runs amber, half magenta — the same two-tone as everything. */
+.spark:nth-child(odd) {
+  box-shadow: 0 0 6px 2px #ffffffe6, 0 0 18px 5px var(--accent-warm);
 }
 
 .button.ghost {
-  background: #2ae0ff0d;
+  background: #8a1bff1f;
   border: 1px solid var(--line-hot);
   color: var(--text);
 }
 
 .button.ghost:active {
-  background: #2ae0ff26;
+  background: #ff2e9333;
+  border-color: var(--accent);
 }
 
 .button.quiet {
@@ -477,24 +652,24 @@ body::after {
 .button.tally {
   min-height: 84px;
   background:
-    radial-gradient(120% 140% at 50% 130%, #2ae0ff24, transparent 70%),
+    radial-gradient(120% 140% at 50% 130%, #ff2e933d, transparent 70%),
     var(--bg-input);
   border: 1px solid var(--accent);
   color: var(--text);
   font-size: 16px;
-  box-shadow: inset 0 0 26px -10px #2ae0ff99;
+  box-shadow: inset 0 0 28px -10px #ff2e93cc;
 }
 
 .button.tally:active {
   background: var(--accent);
   color: var(--accent-text);
-  box-shadow: 0 0 30px -6px #2ae0ff;
+  box-shadow: 0 0 32px -6px var(--accent);
 }
 
 .button:focus-visible,
 .segment:focus-visible,
 .stepper-button:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--accent-warm);
   outline-offset: 2px;
 }
 
@@ -508,8 +683,8 @@ body::after {
   line-height: 1.05;
   letter-spacing: 0.01em;
   font-variant-numeric: tabular-nums;
-  color: var(--accent);
-  text-shadow: 0 0 34px #2ae0ff80;
+  color: var(--accent-warm);
+  text-shadow: 0 0 12px #ffae1f66, 0 0 40px #ff2e93cc;
 }
 
 .clock.dim {
@@ -517,12 +692,41 @@ body::after {
   text-shadow: none;
 }
 
+/* How much round is left, as one draining bar under the count. */
+.meter {
+  --fill: 1;
+  position: relative;
+  width: min(260px, 78%);
+  height: 6px;
+  margin: 0 auto 4px;
+  border-radius: 99px;
+  background: #ffffff17;
+  box-shadow: inset 0 0 0 1px #ffffff14;
+  overflow: hidden;
+}
+
+.meter::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: scaleX(var(--fill));
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--accent-deep), var(--accent) 55%, var(--accent-warm));
+  box-shadow: 0 0 18px -2px var(--accent);
+  transition: transform 400ms linear;
+}
+
+.meter.dim::before {
+  background: var(--text-dim);
+  box-shadow: none;
+}
+
 /* --- role card ---------------------------------------------------------- */
 
 .card {
   background-image: radial-gradient(
     110% 55% at 50% 0%,
-    color-mix(in srgb, var(--role) 20%, transparent),
+    color-mix(in srgb, var(--role) 26%, transparent),
     transparent 70%
   );
 }
@@ -534,7 +738,7 @@ body::after {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--role);
-  text-shadow: 0 0 34px color-mix(in srgb, var(--role) 55%, transparent);
+  text-shadow: 0 0 38px color-mix(in srgb, var(--role) 70%, transparent);
 }
 
 .card.role-master {
@@ -551,7 +755,8 @@ body::after {
 
 /* The "you are the" line picks up the role tint so the card reads as one unit. */
 .card .eyebrow {
-  color: color-mix(in srgb, var(--role) 75%, var(--text-dim));
+  color: color-mix(in srgb, var(--role) 80%, var(--text));
+  text-shadow: 0 0 18px color-mix(in srgb, var(--role) 45%, transparent);
 }
 
 .role-brief {
@@ -563,14 +768,14 @@ body::after {
 
 .word-box {
   position: relative;
-  margin-top: 26px;
+  margin-top: 22px;
   padding: 20px 18px;
   border: 1px solid var(--line-hot);
   border-radius: var(--radius);
   background:
-    linear-gradient(180deg, #2ae0ff12, transparent 60%),
-    color-mix(in srgb, var(--bg-panel) 88%, transparent);
-  box-shadow: inset 0 0 40px -18px color-mix(in srgb, var(--role) 70%, transparent);
+    linear-gradient(180deg, #ff2e9317, transparent 60%),
+    color-mix(in srgb, var(--bg-panel) 90%, transparent);
+  box-shadow: inset 0 0 44px -16px color-mix(in srgb, var(--role) 85%, transparent);
 }
 
 .word-box::before,
@@ -580,7 +785,7 @@ body::after {
   width: 11px;
   height: 11px;
   border: 1px solid var(--role);
-  opacity: 0.7;
+  opacity: 0.75;
 }
 
 .word-box::before {
@@ -595,11 +800,6 @@ body::after {
   left: -1px;
   border-right: none;
   border-top: none;
-}
-
-.word-box.muted {
-  opacity: 0.6;
-  box-shadow: none;
 }
 
 .word-label {
@@ -620,14 +820,33 @@ body::after {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   overflow-wrap: anywhere;
-  text-shadow: 0 0 26px #2ae0ff4d;
+  color: var(--text);
+  text-shadow: 0 0 28px #ff2e9380;
 }
 
-.hidden-word {
-  letter-spacing: 0.3em;
-  color: var(--text-dim);
+/* Commons get the word struck out under a marker bar, with a slow read-head
+   crawling across it. */
+.redacted {
+  position: relative;
+  display: block;
+  padding: 11px 14px;
+  border-radius: 2px;
+  background: linear-gradient(180deg, #0a0513, #04020a);
+  box-shadow: inset 0 0 0 1px #ffffff14, 0 6px 20px -8px #000;
+  color: #5b4783;
+  font-size: 17px;
+  letter-spacing: 0.34em;
   text-shadow: none;
-  animation: flicker 3.2s ease-in-out infinite;
+  overflow: hidden;
+}
+
+.redacted::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 40%, #ff2e9333 50%, transparent 60%);
+  transform: translateX(-120%);
+  animation: sweep 6s ease-in-out infinite;
 }
 
 /* --- confirm sheet ------------------------------------------------------ */
@@ -644,7 +863,7 @@ body::after {
 .sheet-backdrop {
   position: absolute;
   inset: 0;
-  background: #020509d9;
+  background: #0b0619e6;
   backdrop-filter: blur(3px);
 }
 
@@ -660,21 +879,22 @@ body::after {
   border-bottom: none;
   border-radius: 10px 10px 0 0;
   background:
-    linear-gradient(180deg, #2ae0ff14, transparent 30%),
+    linear-gradient(180deg, #ff2e931f, transparent 30%),
     var(--bg-panel);
-  box-shadow: 0 -20px 60px -20px #2ae0ff59;
+  box-shadow: 0 -24px 70px -20px #ff2e9373;
   animation: sheet-rise 160ms ease-out;
 }
 
-/* Hazard hairline along the top edge of the sheet. */
+/* Hazard tape along the top edge of the sheet, matching the folder band. */
 .sheet::before {
   content: '';
   position: absolute;
   top: -1px;
   left: 14px;
   right: 14px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  height: 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg, transparent, var(--accent-warm), var(--accent), transparent);
 }
 
 .sheet-title {
@@ -691,7 +911,19 @@ body::after {
   font-size: 15px;
 }
 
-/* --- summary roster ----------------------------------------------------- */
+/* --- summary ------------------------------------------------------------ */
+
+/* The payoff line — the whole round resolves into this one word. */
+.reveal-word {
+  font-size: 40px;
+  letter-spacing: 0.08em;
+  background: linear-gradient(100deg, var(--accent-warm), var(--accent) 60%, var(--accent-deep));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  filter: drop-shadow(0 0 26px #ff2e9380);
+}
 
 .roster {
   margin: 0;
@@ -713,8 +945,8 @@ body::after {
   border-radius: var(--radius);
   background: linear-gradient(
     90deg,
-    color-mix(in srgb, var(--role) 12%, transparent),
-    var(--bg-input) 45%
+    color-mix(in srgb, var(--role) 20%, transparent),
+    var(--bg-input) 55%
   );
 }
 
@@ -734,7 +966,7 @@ body::after {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--role);
-  text-shadow: 0 0 16px color-mix(in srgb, var(--role) 50%, transparent);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--role) 60%, transparent);
 }
 
 .roster-row.role-master {
@@ -768,24 +1000,93 @@ body::after {
   }
 }
 
-@keyframes flicker {
+/* Sweeps the highlight layer across, then holds it off-screen until the loop
+   comes round again. The base gradient underneath never moves. */
+@keyframes sweep-fill {
+  0% {
+    background-position: -190% 0, 0 0;
+  }
+  55%,
+  100% {
+    background-position: 190% 0, 0 0;
+  }
+}
+
+/* Struck, guttering, struck again — then dark for most of the cycle. */
+@keyframes crackle {
+  0%,
+  62%,
+  100% {
+    opacity: 0;
+  }
+  64% {
+    opacity: 0.85;
+  }
+  66% {
+    opacity: 0.1;
+  }
+  68% {
+    opacity: 0.6;
+  }
+  70% {
+    opacity: 0;
+  }
+  86% {
+    opacity: 0.4;
+  }
+  88% {
+    opacity: 0;
+  }
+}
+
+/* One spark's whole life: struck at the edge, thrown clear, guttering out.
+   Only the endpoints set a transform, so the flicker frames in between ride
+   the same straight path. */
+@keyframes spark {
+  0% {
+    transform: translate(0, 0) scale(0.3);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  35% {
+    opacity: 0.5;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(0.15);
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
   0%,
   100% {
     opacity: 1;
   }
-  45% {
-    opacity: 0.45;
-  }
   50% {
-    opacity: 0.85;
+    opacity: 0.25;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .sheet,
-  .button.primary::after,
-  .hidden-word {
+  .button.primary,
+  .button.primary::before,
+  .redacted::after,
+  .classification::before {
     animation: none;
+  }
+
+  .electrify {
+    display: none;
+  }
+
+  .meter::before {
+    transition: none;
   }
 }
 
@@ -796,6 +1097,10 @@ body::after {
     font-size: 23px;
   }
 
+  .title.brand {
+    font-size: 36px;
+  }
+
   .big-name {
     font-size: 32px;
   }
@@ -804,8 +1109,12 @@ body::after {
     font-size: 36px;
   }
 
+  .reveal-word {
+    font-size: 32px;
+  }
+
   .word-box {
-    margin-top: 18px;
+    margin-top: 16px;
   }
 
   .clock {

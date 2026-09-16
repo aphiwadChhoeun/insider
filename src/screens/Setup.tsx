@@ -8,6 +8,7 @@ import {
   QUESTION_STEP,
 } from '../game';
 import type { Action, State } from '../game';
+import Electrify from '../components/Electrify';
 
 type Props = {
   state: State;
@@ -20,12 +21,16 @@ export default function Setup({ state, dispatch }: Props) {
   return (
     <div className="screen">
       <header className="screen-head">
-        <h1 className="title">Insider</h1>
+        <p className="classification">Classified &middot; eyes only</p>
+        <h1 className="title brand">Insider</h1>
         <p className="subtitle">Pass-the-phone role dealer</p>
       </header>
 
       <section className="panel">
-        <h2 className="panel-title">How many players?</h2>
+        <h2 className="panel-title">
+          How many players?
+          <span className="panel-code">01</span>
+        </h2>
         <Stepper
           value={state.playerCount}
           min={MIN_PLAYERS}
@@ -38,7 +43,10 @@ export default function Setup({ state, dispatch }: Props) {
       </section>
 
       <section className="panel">
-        <h2 className="panel-title">How does the round end?</h2>
+        <h2 className="panel-title">
+          How does the round end?
+          <span className="panel-code">02</span>
+        </h2>
         <div className="segmented" role="group" aria-label="Round limit">
           <button
             type="button"
@@ -90,6 +98,7 @@ export default function Setup({ state, dispatch }: Props) {
       <section className="panel">
         <h2 className="panel-title">
           Names <span className="panel-note">optional</span>
+          <span className="panel-code">03</span>
         </h2>
         <div className="name-list">
           {seats.map((seat) => (
@@ -114,6 +123,7 @@ export default function Setup({ state, dispatch }: Props) {
           className="button primary"
           onClick={() => dispatch({ type: 'startGame' })}
         >
+          <Electrify />
           Start game
         </button>
         <button

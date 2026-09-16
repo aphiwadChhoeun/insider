@@ -21,7 +21,7 @@ npm run build   # typecheck + production build into dist/
 
 ## The flow
 
-1. **Setup** — pick a player count (3–12), choose how the round ends, and
+1. **Setup** — pick a player count (4–12), choose how the round ends, and
    optionally type names; blanks become `Player N`.
    - **Time** (default, 5 minutes, 1–15) — the phone counts down while you play.
    - **Questions** (default 20, 5–50 in steps of 5) — tap once per question asked.

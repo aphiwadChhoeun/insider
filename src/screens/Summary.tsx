@@ -1,4 +1,5 @@
 import type { Action, Role, Round } from '../game';
+import Electrify from '../components/Electrify';
 
 type Props = {
   round: Round;
@@ -15,12 +16,16 @@ export default function Summary({ round, dispatch }: Props) {
   return (
     <div className="screen">
       <header className="screen-head">
+        <p className="classification done">Declassified</p>
         <p className="eyebrow">The word was</p>
-        <h1 className="word">{round.word}</h1>
+        <h1 className="word reveal-word">{round.word}</h1>
       </header>
 
       <section className="panel">
-        <h2 className="panel-title">Everyone&rsquo;s role</h2>
+        <h2 className="panel-title">
+          Everyone&rsquo;s role
+          <span className="panel-code">Roster</span>
+        </h2>
         <ul className="roster">
           {round.players.map((player) => (
             <li key={player.name} className={`roster-row role-${player.role}`}>
@@ -37,6 +42,7 @@ export default function Summary({ round, dispatch }: Props) {
           className="button primary"
           onClick={() => dispatch({ type: 'samePlayers' })}
         >
+          <Electrify />
           New round, same players
         </button>
         <button

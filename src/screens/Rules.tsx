@@ -1,4 +1,5 @@
 import type { Action } from '../game';
+import Electrify from '../components/Electrify';
 
 type Props = {
   dispatch: (action: Action) => void;
@@ -12,7 +13,10 @@ export default function Rules({ dispatch }: Props) {
       </header>
 
       <section className="panel prose">
-        <h2 className="panel-title">The roles</h2>
+        <h2 className="panel-title">
+          The roles
+          <span className="panel-code">Brief</span>
+        </h2>
         <p>
           <strong>Master</strong> knows the secret word and answers questions with yes, no, or
           I don&rsquo;t know.
@@ -27,7 +31,10 @@ export default function Rules({ dispatch }: Props) {
       </section>
 
       <section className="panel prose">
-        <h2 className="panel-title">The round</h2>
+        <h2 className="panel-title">
+          The round
+          <span className="panel-code">Ops</span>
+        </h2>
         <p>
           1. Everyone asks the Master yes/no questions until someone says the word out loud. If the
           time runs out with no answer, everyone loses.
@@ -47,6 +54,7 @@ export default function Rules({ dispatch }: Props) {
           className="button primary"
           onClick={() => dispatch({ type: 'closeRules' })}
         >
+          <Electrify />
           Back
         </button>
         <button

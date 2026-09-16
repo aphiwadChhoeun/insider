@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, test, vi } from 'vitest';
-import { initialState, reducer } from './game';
+import { MIN_PLAYERS, initialState, reducer } from './game';
 import { STORAGE_KEY, clear, load, save } from './storage';
 
 afterEach(() => {
@@ -10,7 +10,7 @@ afterEach(() => {
 
 describe('load and save', () => {
   test('a saved game comes back on load', () => {
-    const state = reducer({ ...initialState, playerCount: 3 }, { type: 'startGame' });
+    const state = reducer({ ...initialState, playerCount: MIN_PLAYERS }, { type: 'startGame' });
     save(state);
     expect(load()?.round?.word).toBe(state.round?.word);
   });

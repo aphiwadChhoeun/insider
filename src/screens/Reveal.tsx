@@ -1,4 +1,5 @@
 import type { Action, Role, Round } from '../game';
+import Electrify from '../components/Electrify';
 
 type Props = {
   round: Round;
@@ -36,6 +37,7 @@ export default function Reveal({ round, dispatch }: Props) {
             className="button primary"
             onClick={() => dispatch({ type: 'showRole' })}
           >
+            <Electrify />
             I&rsquo;m {player.name} &mdash; show my role
           </button>
         </footer>
@@ -45,6 +47,9 @@ export default function Reveal({ round, dispatch }: Props) {
 
   return (
     <div className={`screen centered card role-${player.role}`}>
+      <span className={`stamp${knowsWord ? '' : ' cleared'}`} aria-hidden="true">
+        {knowsWord ? 'Classified' : 'Need to know'}
+      </span>
       <p className="eyebrow">{player.name}, you are the</p>
       <h1 className="role-name">{ROLE_LABEL[player.role]}</h1>
       <p className="role-brief">{ROLE_BRIEF[player.role]}</p>
@@ -55,9 +60,9 @@ export default function Reveal({ round, dispatch }: Props) {
           <p className="word">{round.word}</p>
         </div>
       ) : (
-        <div className="word-box muted">
+        <div className="word-box">
           <p className="word-label">The secret word</p>
-          <p className="word hidden-word">? ? ?</p>
+          <p className="word redacted">Redacted</p>
         </div>
       )}
 
@@ -67,6 +72,7 @@ export default function Reveal({ round, dispatch }: Props) {
           className="button primary"
           onClick={() => dispatch({ type: 'hideRole', now: Date.now() })}
         >
+          <Electrify />
           {round.turn + 1 === round.players.length ? 'Hide & finish' : 'Hide & pass on'}
         </button>
       </footer>

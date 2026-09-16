@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import Electrify from './Electrify';
 
 type Props = {
   title: string;
@@ -42,6 +43,7 @@ export default function ConfirmSheet({
         <h2 className="sheet-title">{title}</h2>
         {body && <p className="sheet-body">{body}</p>}
         <button type="button" className="button primary" onClick={onConfirm}>
+          <Electrify />
           {confirmLabel}
         </button>
         <button type="button" className="button ghost" ref={cancelRef} onClick={onCancel}>

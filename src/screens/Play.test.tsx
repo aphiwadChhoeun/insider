@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { initialState, reducer } from '../game';
+import { MIN_PLAYERS, initialState, reducer } from '../game';
 import type { Action, Round } from '../game';
 import Play from './Play';
 
@@ -9,8 +9,11 @@ afterEach(cleanup);
 
 /** A round sitting on the play screen, bounded however the caller asks. */
 function playingRound(limit: Partial<typeof initialState>): Round {
-  let state = reducer({ ...initialState, playerCount: 3, ...limit }, { type: 'startGame' });
-  for (let i = 0; i < 3; i++) {
+  let state = reducer(
+    { ...initialState, playerCount: MIN_PLAYERS, ...limit },
+    { type: 'startGame' },
+  );
+  for (let i = 0; i < MIN_PLAYERS; i++) {
     state = reducer(reducer(state, { type: 'showRole' }), { type: 'hideRole', now: Date.now() });
   }
   return state.round!;

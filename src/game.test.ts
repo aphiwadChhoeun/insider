@@ -59,12 +59,16 @@ describe('assignRoles', () => {
   });
 
   test('works at the minimum player count', () => {
-    const players = assignRoles(['A', 'B', 'C']);
-    expect(players.map((p) => p.role).sort()).toEqual(['common', 'insider', 'master']);
+    const players = assignRoles(names.slice(0, MIN_PLAYERS));
+    expect(players).toHaveLength(MIN_PLAYERS);
+    expect(players.filter((p) => p.role === 'master')).toHaveLength(1);
+    expect(players.filter((p) => p.role === 'insider')).toHaveLength(1);
+    expect(players.filter((p) => p.role === 'common')).toHaveLength(MIN_PLAYERS - 2);
   });
 
   test('rejects fewer players than the minimum', () => {
-    expect(() => assignRoles(['A', 'B'])).toThrow(/at least 3/i);
+    const tooFew = names.slice(0, MIN_PLAYERS - 1);
+    expect(() => assignRoles(tooFew)).toThrow(new RegExp(`at least ${MIN_PLAYERS}`, 'i'));
   });
 });
 
@@ -287,15 +291,15 @@ describe('the round clock', () => {
 
   /** Deals every role and hides the last card, landing on the play screen. */
   const playFrom = (state: Partial<State>, now = NOW) => {
-    let s = reducer({ ...initialState, playerCount: 3, ...state }, { type: 'startGame' });
-    for (let i = 0; i < 3; i++) {
+    let s = reducer({ ...initialState, playerCount: MIN_PLAYERS, ...state }, { type: 'startGame' });
+    for (let i = 0; i < MIN_PLAYERS; i++) {
       s = reducer(reducer(s, { type: 'showRole' }), { type: 'hideRole', now });
     }
     return s;
   };
 
   test('a fresh round has no clock yet', () => {
-    const state = reducer({ ...initialState, playerCount: 3 }, { type: 'startGame' });
+    const state = reducer({ ...initialState, playerCount: MIN_PLAYERS }, { type: 'startGame' });
     expect(state.round?.clock).toBeNull();
   });
 
@@ -310,7 +314,7 @@ describe('the round clock', () => {
   });
 
   test('the clock does not start mid-reveal', () => {
-    let state = reducer({ ...initialState, playerCount: 3 }, { type: 'startGame' });
+    let state = reducer({ ...initialState, playerCount: MIN_PLAYERS }, { type: 'startGame' });
     state = reducer(reducer(state, { type: 'showRole' }), { type: 'hideRole', now: NOW });
     expect(state.screen).toBe('reveal');
     expect(state.round?.clock).toBeNull();

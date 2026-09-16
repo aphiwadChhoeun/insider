@@ -1,8 +1,10 @@
 import { useCallback, useState } from 'react';
+import type { CSSProperties } from 'react';
 import { questionsLeft } from '../game';
 import type { Action, Round } from '../game';
 import { formatClock, useClock } from '../useClock';
 import ConfirmSheet from '../components/ConfirmSheet';
+import Electrify from '../components/Electrify';
 
 type Props = {
   round: Round;
@@ -20,6 +22,12 @@ export default function Play({ round, dispatch }: Props) {
   const stopAsking = useCallback(() => setAsking(false), []);
   const revealAnswer = () => dispatch({ type: 'revealAnswer' });
 
+  // How much of the round is still in hand, 1 → 0, for the meter under the count.
+  const remaining =
+    round.limit.mode === 'time'
+      ? (secondsLeft ?? 0) / (round.limit.minutes * 60)
+      : (left ?? 0) / round.limit.questions;
+
   return (
     <div className="screen centered">
       {spent ? (
@@ -35,6 +43,7 @@ export default function Play({ round, dispatch }: Props) {
         <>
           <p className="eyebrow">{paused ? 'Paused' : 'Time left'}</p>
           <p className={`clock${paused ? ' dim' : ''}`}>{formatClock(secondsLeft ?? 0)}</p>
+          <Meter remaining={remaining} dim={paused} />
           <p className="lede">
             Ask the Master yes/no questions until someone says the word out loud.
           </p>
@@ -43,6 +52,7 @@ export default function Play({ round, dispatch }: Props) {
         <>
           <p className="clock">{left}</p>
           <p className="eyebrow">{left === 1 ? 'question left' : 'questions left'}</p>
+          <Meter remaining={remaining} />
           <p className="lede">Tap once for every question the group asks the Master.</p>
         </>
       )}
@@ -73,6 +83,7 @@ export default function Play({ round, dispatch }: Props) {
           className="button primary"
           onClick={() => (spent ? revealAnswer() : setAsking(true))}
         >
+          <Electrify />
           Reveal the answer
         </button>
         <button
@@ -95,5 +106,18 @@ export default function Play({ round, dispatch }: Props) {
         />
       )}
     </div>
+  );
+}
+
+/** Decorative drain bar; the count above it is the accessible reading. */
+function Meter({ remaining, dim = false }: { remaining: number; dim?: boolean }) {
+  const fill = Math.min(1, Math.max(0, remaining));
+
+  return (
+    <div
+      className={`meter${dim ? ' dim' : ''}`}
+      style={{ '--fill': fill } as CSSProperties}
+      aria-hidden="true"
+    />
   );
 }

@@ -1,11 +1,11 @@
 import { describe, expect, test } from 'vitest';
-import { MAX_PLAYERS, initialState, reducer } from './game';
+import { MAX_PLAYERS, MIN_PLAYERS, initialState, reducer } from './game';
 import type { State } from './game';
 import { parseState } from './storage';
 
-/** A round in progress: 3 players, one card face up, on the clock. */
+/** A round in progress: the smallest legal game, one card face up. */
 function inProgress(): State {
-  const started = reducer({ ...initialState, playerCount: 3 }, { type: 'startGame' });
+  const started = reducer({ ...initialState, playerCount: MIN_PLAYERS }, { type: 'startGame' });
   return reducer(started, { type: 'showRole' });
 }
 
@@ -73,14 +73,14 @@ describe('parseState: repairing a damaged save', () => {
     const saved = inProgress();
     saved.round!.turn = 77;
     expect(saved.screen).toBe('reveal');
-    expect(roundTrip(saved)?.round?.turn).toBe(2);
+    expect(roundTrip(saved)?.round?.turn).toBe(MIN_PLAYERS - 1);
   });
 
   test('leaves the play screen past the last player, where that is normal', () => {
     const saved = inProgress();
     saved.screen = 'play';
-    saved.round!.turn = 3;
-    expect(roundTrip(saved)?.round?.turn).toBe(3);
+    saved.round!.turn = MIN_PLAYERS;
+    expect(roundTrip(saved)?.round?.turn).toBe(MIN_PLAYERS);
   });
 
   test('clamps a negative turn', () => {

@@ -1,6 +1,6 @@
 import { WORDS } from './words';
 
-export const MIN_PLAYERS = 3;
+export const MIN_PLAYERS = 4;
 export const MAX_PLAYERS = 12;
 export const MIN_MINUTES = 1;
 export const MAX_MINUTES = 15;

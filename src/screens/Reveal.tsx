@@ -12,10 +12,22 @@ const ROLE_LABEL: Record<Role, string> = {
   common: 'Common',
 };
 
+const CLASSIC_LABEL: Record<Role, string> = {
+  master: 'Master',
+  insider: 'Insider',
+  common: 'Guesser',
+};
+
 const ROLE_BRIEF: Record<Role, string> = {
   master: 'Answer the questions. You know the word.',
   insider: 'You know the word too. Steer them there without getting caught.',
   common: 'Find the word with questions. One of you already knows it.',
+};
+
+const CLASSIC_BRIEF: Record<Role, string> = {
+  master: 'Answer the questions. Only you know the word.',
+  insider: '',
+  common: 'Find the word with yes/no questions. Only the Master knows it.',
 };
 
 export default function Reveal({ round, dispatch }: Props) {
@@ -51,8 +63,8 @@ export default function Reveal({ round, dispatch }: Props) {
         {knowsWord ? 'Classified' : 'Need to know'}
       </span>
       <p className="eyebrow">{player.name}, you are the</p>
-      <h1 className="role-name">{ROLE_LABEL[player.role]}</h1>
-      <p className="role-brief">{ROLE_BRIEF[player.role]}</p>
+      <h1 className="role-name">{(round.classic ? CLASSIC_LABEL : ROLE_LABEL)[player.role]}</h1>
+      <p className="role-brief">{(round.classic ? CLASSIC_BRIEF : ROLE_BRIEF)[player.role]}</p>
 
       {knowsWord ? (
         <div className="word-box">

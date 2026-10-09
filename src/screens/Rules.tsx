@@ -48,6 +48,17 @@ export default function Rules({ dispatch }: Props) {
         </p>
       </section>
 
+      <section className="panel prose">
+        <h2 className="panel-title">
+          Classic 20 questions
+          <span className="panel-code">Option</span>
+        </h2>
+        <p>
+          Switch it on in setup to drop the Insider. Only the Master knows the word, and everyone
+          else asks yes/no questions to find it. No vote at the end.
+        </p>
+      </section>
+
       <footer className="screen-foot">
         <button
           type="button"

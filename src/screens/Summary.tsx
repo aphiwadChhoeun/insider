@@ -30,7 +30,7 @@ export default function Summary({ round, dispatch }: Props) {
           {round.players.map((player) => (
             <li key={player.name} className={`roster-row role-${player.role}`}>
               <span className="roster-name">{player.name}</span>
-              <span className="roster-role">{ROLE_LABEL[player.role]}</span>
+              <span className="roster-role">{player.role === 'common' && round.classic ? 'Guesser' : ROLE_LABEL[player.role]}</span>
             </li>
           ))}
         </ul>

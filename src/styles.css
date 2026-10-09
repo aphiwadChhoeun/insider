@@ -1125,3 +1125,26 @@ body::after {
     min-height: 68px;
   }
 }
+
+.toggle {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 14px;
+  min-height: var(--tap);
+  color: var(--text);
+  font-family: var(--font-hud);
+  cursor: pointer;
+}
+
+.toggle input {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 2px 0 0;
+  accent-color: var(--accent);
+}
+
+.toggle .hint {
+  display: block;
+}

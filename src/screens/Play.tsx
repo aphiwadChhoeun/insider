@@ -33,7 +33,9 @@ export default function Play({ round, dispatch }: Props) {
       {spent ? (
         <>
           <p className="eyebrow">{onClock ? "Time's up" : 'Out of questions'}</p>
-          <h1 className="title">The Commons never found it</h1>
+          <h1 className="title">
+            {round.classic ? 'Nobody found it' : 'The Commons never found it'}
+          </h1>
           <p className="lede">
             Unless someone said the word just in time, nobody wins this round. Talk it out, then
             reveal.
@@ -97,8 +99,12 @@ export default function Play({ round, dispatch }: Props) {
 
       {asking && (
         <ConfirmSheet
-          title="Reveal the word and roles?"
-          body="This ends the round for everyone. Make sure the group has finished voting."
+          title={round.classic ? 'Reveal the word?' : 'Reveal the word and roles?'}
+          body={
+            round.classic
+              ? 'This ends the round for everyone.'
+              : 'This ends the round for everyone. Make sure the group has finished voting.'
+          }
           confirmLabel="Reveal it — everyone's ready"
           cancelLabel="Not yet"
           onConfirm={revealAnswer}

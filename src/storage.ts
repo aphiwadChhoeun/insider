@@ -77,6 +77,7 @@ export function parseState(raw: unknown): State | null {
     returnScreen: usable ? (asScreen(raw.returnScreen) ?? 'setup') : 'setup',
     playerCount: clamp(raw.playerCount, MIN_PLAYERS, MAX_PLAYERS),
     names: resize(raw.names as string[], MAX_PLAYERS),
+    classic: raw.classic === true,
     mode,
     minutes: clamp(raw.minutes, MIN_MINUTES, MAX_MINUTES),
     questions: clamp(raw.questions, MIN_QUESTIONS, MAX_QUESTIONS),
@@ -107,6 +108,7 @@ function parseRound(raw: unknown): Round | null {
 
   return {
     word: raw.word,
+    classic: raw.classic === true,
     players,
     // Reveal order is over once turn passes the last player, so allow
     // players.length itself — that is the "everyone has seen it" position.

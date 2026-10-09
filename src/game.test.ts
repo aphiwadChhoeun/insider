@@ -376,3 +376,20 @@ describe('startOver', () => {
     expect(reducer(state, { type: 'startOver' })).toEqual(initialState);
   });
 });
+
+describe('classic 20 questions', () => {
+  test('assigns one master and no insider', () => {
+    const players = assignRoles(['a', 'b', 'c', 'd'], true);
+    expect(players.filter((p) => p.role === 'master')).toHaveLength(1);
+    expect(players.filter((p) => p.role === 'insider')).toHaveLength(0);
+    expect(players.filter((p) => p.role === 'common')).toHaveLength(3);
+  });
+
+  test('the toggle carries into the round', () => {
+    const on = reducer({ ...initialState, classic: true }, { type: 'startGame' });
+    expect(on.round?.classic).toBe(true);
+    expect(on.round?.players.some((p) => p.role === 'insider')).toBe(false);
+    const off = reducer(initialState, { type: 'startGame' });
+    expect(off.round?.classic).toBe(false);
+  });
+});

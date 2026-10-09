@@ -39,7 +39,22 @@ export default function Setup({ state, dispatch }: Props) {
           noun="player"
           onChange={(count) => dispatch({ type: 'setCount', count })}
         />
-        <p className="hint">1 Master &middot; 1 Insider &middot; {state.playerCount - 2} Common</p>
+        <p className="hint">
+          {state.classic
+            ? `1 Master \u00b7 ${state.playerCount - 1} Guessers`
+            : `1 Master \u00b7 1 Insider \u00b7 ${state.playerCount - 2} Common`}
+        </p>
+        <label className="toggle">
+          <input
+            type="checkbox"
+            checked={state.classic}
+            onChange={(e) => dispatch({ type: 'setClassic', classic: e.target.checked })}
+          />
+          <span>
+            Classic 20 questions
+            <span className="hint">No Insider. Only the Master knows the word.</span>
+          </span>
+        </label>
       </section>
 
       <section className="panel">

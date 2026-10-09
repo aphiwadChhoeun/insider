@@ -1,6 +1,6 @@
 import { WORDS } from './words';
 
-export const MIN_PLAYERS = 4;
+export const MIN_PLAYERS = 3;
 export const MAX_PLAYERS = 12;
 export const MIN_MINUTES = 1;
 export const MAX_MINUTES = 15;
@@ -29,6 +29,8 @@ export type Player = {
 
 export type Round = {
   word: string;
+  /** Classic 20 questions: no Insider, only the Master knows the word. */
+  classic: boolean;
   players: Player[];
   /** Index of the player whose turn it is to take the phone. */
   turn: number;
@@ -51,6 +53,8 @@ export type State = {
   playerCount: number;
   /** Raw name entries by seat; blanks become "Player N" at game start. */
   names: string[];
+  /** Whether new rounds play classic 20 questions, without an Insider. */
+  classic: boolean;
   mode: Mode;
   /** Minutes to use when mode is 'time'. */
   minutes: number;
@@ -62,6 +66,7 @@ export type State = {
 export type Action =
   | { type: 'setCount'; count: number }
   | { type: 'setName'; index: number; name: string }
+  | { type: 'setClassic'; classic: boolean }
   | { type: 'setMode'; mode: Mode }
   | { type: 'setMinutes'; minutes: number }
   | { type: 'setQuestions'; questions: number }
@@ -82,8 +87,9 @@ export type Action =
 export const initialState: State = {
   screen: 'setup',
   returnScreen: 'setup',
-  playerCount: 4,
+  playerCount: MIN_PLAYERS,
   names: Array.from({ length: MAX_PLAYERS }, () => ''),
+  classic: false,
   mode: 'time',
   minutes: 5,
   questions: 20,
@@ -94,14 +100,14 @@ export function resolveNames(entries: string[]): string[] {
   return entries.map((entry, index) => entry.trim() || `Player ${index + 1}`);
 }
 
-export function assignRoles(names: string[]): Player[] {
+export function assignRoles(names: string[], classic = false): Player[] {
   if (names.length < MIN_PLAYERS) {
     throw new Error(`Insider needs at least ${MIN_PLAYERS} players`);
   }
   const roles: Role[] = [
     'master',
-    'insider',
-    ...Array.from<unknown, Role>({ length: names.length - 2 }, () => 'common'),
+    ...(classic ? [] : (['insider'] as Role[])),
+    ...Array.from<unknown, Role>({ length: names.length - (classic ? 1 : 2) }, () => 'common'),
   ];
   const shuffled = shuffle(roles);
   return names.map((name, index) => ({ name, role: shuffled[index] }));
@@ -136,6 +142,9 @@ export function reducer(state: State, action: Action): State {
       return { ...state, names };
     }
 
+    case 'setClassic':
+      return { ...state, classic: action.classic };
+
     case 'setMode':
       return { ...state, mode: action.mode };
 
@@ -153,6 +162,7 @@ export function reducer(state: State, action: Action): State {
         round: newRound(
           resolveNames(state.names.slice(0, state.playerCount)),
           currentLimit(state),
+          state.classic,
         ),
       };
 
@@ -213,7 +223,7 @@ export function reducer(state: State, action: Action): State {
         ...state,
         screen: 'reveal',
         returnScreen: 'reveal',
-        round: newRound(names, currentLimit(state), state.round.word),
+        round: newRound(names, currentLimit(state), state.classic, state.round.word),
       };
     }
 
@@ -231,10 +241,11 @@ export function reducer(state: State, action: Action): State {
   }
 }
 
-function newRound(names: string[], limit: Limit, avoidWord?: string): Round {
+function newRound(names: string[], limit: Limit, classic: boolean, avoidWord?: string): Round {
   return {
     word: pickWord(avoidWord),
-    players: assignRoles(names),
+    classic,
+    players: assignRoles(names, classic),
     turn: 0,
     revealed: false,
     limit,
